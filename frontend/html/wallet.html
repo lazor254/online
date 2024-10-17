@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wallet</title>
+        <link rel="stylesheet" href="/frontend/css/pages.css">
+        <script src="https://kit.fontawesome.com/c206cd2e16.js" crossorigin="anonymous"></script>
+        <style>
+            body{
+             background-image: url(../img/wallet.jpg);
+             background-size: cover;
+             background-position: center;
+             background-repeat: no-repeat;
+             background-attachment: fixed;
+             height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="navbar">
+            <div class="navbar-logo"><a href="/frontend/html/home.html"> <img src="../img/logo.png" alt="logo"></a></div>
+            
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger" id="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="/frontend/html/home.html" id="home-link" class="nav-link">Home</a>
+                <a href="/frontend/html/wallet.html" id="wallet-link" class="nav-link">Wallet</a>
+                <a href="/frontend/html/mine.html" id="mine-link" class="nav-link" >Mine</a>
+                <a href="/frontend/html/watch.html" id="watch-link" class="nav-link">Watch</a>
+                <a href="/frontend/html/profile.html" id="profile-link" class="nav-link">Profile</a>
+                <a href="/frontend/html/register.html" id="register-link">Register</a>
+            </div>
+        
+            <!-- Mobile Dropdown Links -->
+            <div class="nav-links-mobile" id="nav-links-mobile">
+                <a href="/frontend/html/home.html" id="home-link">Home</a>
+                <a href="/frontend/html/wallet.html" id="wallet-link">Wallet</a>
+                <a href="/frontend/html/mine.html" id="mine-link">Mine</a>
+                <a href="/frontend/html/watch.html" id="watch-link">Watch</a>
+                <a href="/frontend/html/profile.html" id="profile-link">Profile</a>
+                <a href="/frontend/html/register.html" id="register-link">Register</a>
+            </div>
+        </div>
+    </nav>
+<main>
+    
+    <section class="wallet-container">
+        <div class="wallet-header">
+            <h1>Your Wallet</h1>
+            <p>Overview of your deposits, earnings, and transactions</p>
+        </div>
+        <div class="wallet-overview">
+            <div class="balance">
+                <h3>Available Balance</h3>
+                <p>$<span id="balance">0.00</span></p>
+            </div>
+            <div class="deposits">
+                <h3>Total Deposits</h3>
+                <p>$<span id="deposits">0.00</span></p>
+            </div>
+            <div class="earnings">
+                <h3>Total Earnings</h3>
+                <p>$<span id="earnings">0.00</span></p>
+            </div>
+        </div>
+
+        <!-- Add Deposit & Withdraw Buttons -->
+        <div class="wallet-actions">
+            <button class="deposit-btn">Deposit Funds</button>
+            <button class="withdraw-btn">Withdraw Funds</button>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="transaction-history">
+            <h2>Transaction History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-10-01</td>
+                        <td>Deposit</td>
+                        <td>$500.00</td>
+                        <td>Completed</td>
+                    </tr>
+                    <tr>
+                        <td>2024-10-05</td>
+                        <td>Earnings</td>
+                        <td>$50.00</td>
+                        <td>Completed</td>
+                    </tr>
+                    <tr>
+                        <td>2024-10-10</td>
+                        <td>Withdrawal</td>
+                        <td>-$300.00</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; NET _ WORK 2024</p>
+</footer>
+
+<script src="../js/wallet.js"></script>
+
+</body>
+</html>

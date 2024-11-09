@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sessionToken = sessionStorage.getItem('token');
     if (sessionToken) {
-        window.location.replace('./home.html');
+        window.location.replace('./index.html');
     } else {
         const user = JSON.parse(sessionStorage.getItem('user'));
         if (user) {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("User Type stored in sessionStorage: ", sessionStorage.getItem('user_type'));
                 
                 loginMsg.textContent = 'Login successful 😊';
-                window.location.href =  usertype === 'buyer' ? './Bhome.html' : './home.html';
+                window.location.href =  usertype === 'buyer' ? './Bhome.html' : './index.html';
 
             } catch (err) {
                 loginMsg.textContent = 'An error occurred: ' + err.message;

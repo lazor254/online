@@ -265,11 +265,11 @@ main {
     margin-top: 70px;
     text-align: center;
     margin-bottom: 30px;
-    color: #0056b3;
+  
 }
 
 .wallet-header h1 {
-    font-size: 25px;
+    font-size: 45px;
     color: navy;
     font-weight: bold;
 }

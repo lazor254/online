@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('http://localhost:7000/api/login', {  // Fixed the port here
+                const response = await fetch('http://localhost:7000/api/login', { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -28,24 +28,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ username, password })
                 });
 
-                let data;
-                try {
-                    data = await response.json();
-                } catch (err) {
-                    data = {};
-                }
-
                 if (!response.ok) {
-                    loginMsg.textContent = data.message || 'Login failed, please try again';
-                } else {
-                    sessionStorage.setItem('token', data.token);
-                    sessionStorage.setItem('user', JSON.stringify(data.user)); // Save user data
-
-                    loginMsg.textContent = 'Login successful 😊';
-                    setTimeout(() => {
-                        window.location.href = './home.html';
-                    }, 1000);
+                    // Check for server-side errors
+                    const errorData = await response.json();
+                    loginMsg.textContent = errorData.message || 'Login failed, please try again';
+                    return; // Exit early if there's an error
                 }
+
+                const {message, token, user} = await response.json();
+
+                const usertype = user.usertype.toLowerCase();
+                
+                // Save token and user data in sessionStorage
+                sessionStorage.setItem('token', token);
+                sessionStorage.setItem('user', JSON.stringify(user)); // Save full user data
+                
+                sessionStorage.setItem('user_type', usertype); // Save the user type separately
+                
+                console.log("User Type stored in sessionStorage: ", sessionStorage.getItem('user_type'));
+                
+                loginMsg.textContent = 'Login successful 😊';
+                window.location.href =  usertype === 'buyer' ? './Bhome.html' : './home.html';
+
             } catch (err) {
                 loginMsg.textContent = 'An error occurred: ' + err.message;
             }

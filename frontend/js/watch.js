@@ -1,188 +1,201 @@
-// Function to mark the current page link as active
-window.onload = function() {
-     const currentPath = window.location.pathname;
+window.onload = function () {
+    const currentPath = window.location.pathname;
 
     // Select all nav links
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // Loop through links and add 'active' class to the one that matches the current URL
     navLinks.forEach(link => {
         if (link.getAttribute('href') === currentPath) {
             link.classList.add('active');
         }
     });
-}
-
-// Define an object of video categories with their respective videos
-const videoCategories = {
-    learn: [
-        // videos
-        {
-            title: "Intro to Tasking",
-            youtubeLink: "https://www.youtube.com/watch?v=7TO-xOhohrQ",  // Link to the YouTube video
-            // earnings: "$0",  // Learn videos don't have earnings
-            // verificationRate: "1 day",
-        },
-        {
-            title: "Understanding Basics",
-            youtubeLink: "https://www.youtube.com/watch?v=7TO-xOhohrQ",
-            // earnings: "$0",
-            // verificationRate: "1 day",
-        },
-
-        {
-            title: "Understanding Basics",
-            youtubeLink: "https://www.youtube.com/watch?v=7TO-xOhohrQ",
-            // earnings: "$0",
-            // verificationRate: "1 day",
-        },
-
-        {
-            title: "Understanding Basics",
-            youtubeLink: "https://www.youtube.com/watch?v=7TO-xOhohrQ",
-            // earnings: "$0",
-            // verificationRate: "1 day",
-        },
-       
-    ],
-    watchToEarn: [
-        {
-            title: "Advanced Tasking Techniques",
-            youtubeLink: "https://www.youtube.com/watch?v=kJQP7kiw5Fk",
-            earnings: "ksh. 5.00",
-            verificationRate: "1 day ",
-
-        },
-        {
-            title: "Boosting Efficiency",
-            youtubeLink: "https://www.youtube.com/watch?v=ghRXlzRnxAg",
-            earnings: "ksh. 5.00",
-            verificationRate: "1 day ",
-           
-        },
-
-        {
-            title: "Boosting Efficiency",
-            youtubeLink: "https://www.youtube.com/watch?v=ghRXlzRnxAg",
-            earnings: "ksh. 5.00",
-            verificationRate: "1 day ",
-           
-        },
-
-        {
-            title: "Boosting Efficiency",
-            youtubeLink: "https://www.youtube.com/watch?v=ghRXlzRnxAg",
-            earnings: "ksh. 5.00",
-            verificationRate: "1 day ",
-           
-        },
-       
-    ],
-    subscribeTasks: [
-        {
-            title: "Subscribe to Channel X",
-            youtubeLink: "https://www.youtube.com/watch?v=u72r7YB6F-A",
-            earnings: "ksh. 10.00",
-            verificationRate: "5 hours",
-
-            
-        },
-        {
-            title: "Follow Channel Y",
-            youtubeLink: "https://www.youtube.com/watch?v=u72r7YB6F-A",
-            earnings: "ksh. 10.00",
-            verificationRate: "4  hours",
-        },
-
-        {
-            title: "Follow Channel Y",
-            youtubeLink: "https://www.youtube.com/watch?v=u72r7YB6F-A",
-            earnings: "ksh. 10.00",
-            verificationRate: "5  hours",
-        },
-
-        {
-            title: "Follow Channel Y",
-            youtubeLink: "https://www.youtube.com/watch?v=u72r7YB6F-A",
-            earnings: "ksh. 10.00",
-            verificationRate: "24  hours",
-        },
-       
-    ]
 };
 
-// Function to create a video card
-function createVideoCard(video, type) {
-    const videoId = video.youtubeLink.split('v=')[1];
-
-
-    // Create a card div
-    const card = document.createElement('div');
-    card.classList.add('card');
-
-    //Button based on the type either watch or subscribe
-    const buttonText = (type === 'subscribeTasks') ? 'Subscribe' : 'Watch';
-
-    // Set the inner HTML for the card
-    card.innerHTML = `
-        <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="Video Preview" class="video-preview">
-        <h3>${video.title}</h3>
-        <p>Earnings: <strong>${video.earnings}</strong></p>
-        <p>Rate: <strong>${video.verificationRate}</strong></p>
-        <button class="action-btn" data-link="${video.youtubeLink}">${buttonText}</button>
-        <button class="verify-btn">Verify</button>
-    `;
-
-    // Add event listener to the "Watch" button
-    card.querySelector('.action-btn').addEventListener('click', function () {
-        window.open(this.getAttribute('data-link'), '_blank');
-    });
-
-    // Add event listener to the "Verify" button
-    card.querySelector('.verify-btn').addEventListener('click', function () {
-        alert("Verification submitted for video: " + video.title);
-    });
-
-    return card;
-}
-
-// Function to populate video cards for each category
-function populateVideoCards() {
-    // Get the containers for each category
-    const learnContainer = document.getElementById('learn-cards');
-    const watchToEarnContainer = document.getElementById('subscribe-cards');
-    const subscribeTasksContainer = document.getElementById('watch-cards');
-
-    // Loop through "Learn" category and create cards
-    videoCategories.learn.forEach(video => {
-        const videoCard = createVideoCard(video, 'learn');
-        learnContainer.appendChild(videoCard);
-    });
-
-    // Loop through "Watch to Earn" category and create cards
-    videoCategories.watchToEarn.forEach(video => {
-        const videoCard = createVideoCard(video, 'WatchToEarn');
-        watchToEarnContainer.appendChild(videoCard);
-    });
-
-    // Loop through "Subscribe Tasks" category and create cards
-    videoCategories.subscribeTasks.forEach(video => {
-        const videoCard = createVideoCard(video, 'SubscribeTasks');
-        subscribeTasksContainer.appendChild(videoCard);
-    });
-}
-
-// Call the function to populate video cards on page load
-populateVideoCards();
-
-
-
-// Get the hamburger button and mobile nav links
 const hamburger = document.getElementById('hamburger');
 const navLinksMobile = document.getElementById('nav-links-mobile');
 
-// Add a click event listener to the hamburger button
 hamburger.addEventListener('click', () => {
-    // Toggle the 'active' class to show/hide the mobile nav links
     navLinksMobile.classList.toggle('active');
 });
+        
+// watch.js
+async function fetchVideosForWatchSection() {
+    try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            console.error('User is not logged in.');
+            return;
+        }
+
+        const response = await fetch('http://localhost:7000/api/videos/all', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const videos = await response.json();
+        console.log('Fetched Videos:', videos);  // Log the response to see the fetched data
+        
+        if (response.ok) {
+            populateWatchSection(videos);  // Call the correct function
+        } else {
+            console.error('Error fetching videos:', videos.message);
+        }
+    } catch (error) {
+        console.error('Error fetching videos:', error);
+    }
+}
+   
+
+// function to create and display video cards
+function populateWatchSection(videos) {
+    const container = document.getElementById('videos-container');
+    container.innerHTML = ''; // Clear any existing content
+
+    videos.forEach((video) => {
+        const amountPerPosition = (video.budget / video.positions).toFixed(2);
+        const card = document.createElement('div');
+        card.className = 'video-card';
+
+        // Generate YouTube thumbnail
+        const videoId = getYouTubeVideoId(video.url);
+        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/0.jpg`;
+
+        // Format the instructions as an ordered list
+        const formattedInstructions = formatInstructions(video.instructions);
+
+        // Create the card HTML with instructions toggle and cash amount
+        card.innerHTML = `
+            <img src="${thumbnailUrl}" alt="${video.title} Thumbnail" class="thumbnail">
+            <h3>${video.title}</h3>
+            <p>Positions: ${video.positions}/${video.positions}</p>
+            <p><strong>Earnings: ksh.${amountPerPosition}</strong></p>
+
+            <!-- Information Button (i icon) -->
+            <button class="info-icon" onclick="toggleInstructions(${video.id})">i</button>
+            
+            <!-- Instructions hidden initially -->
+            <div id="instructions-${video.id}" class="instructions" style="display: none;">
+                <ol>
+                    ${formattedInstructions}
+                </ol>
+            </div>
+            
+            <button onclick="watchVideo('${video.url}')">Watch</button>
+            <button onclick="openVerifyModal(${video.id})">Verify</button>  <!-- Trigger modal here -->
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function formatInstructions(instructions) {
+    // Split and trim instructions
+    const steps = instructions.split('\n').map(step => step.trim());
+  
+    // Create numbered instructions
+    return steps.map((step, index) => `${index + 1}. ${step}\n`).join('');
+  }
+  
+
+// Helper to get the video ID from the URL
+function getYouTubeVideoId(url) {
+    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+}
+
+
+// Watch in a new tab
+function watchVideo(url) {
+    window.open(url, '_blank');
+}
+
+// Toggle instructions visibility
+function toggleInstructions(videoId) {
+    const instructions = document.getElementById(`instructions-${videoId}`);
+    instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+}
+
+// open verification modal
+
+function openVerifyModal(videoId) {
+    const modal = document.getElementById('verifyModal');
+    modal.style.display = 'flex';
+
+   const user = sessionStorage.getItem('user');
+   const parsedUser = user ? JSON.parse(user) : null;
+   const userId = parsedUser ? parsedUser.id : null; 
+
+   if (!userId) {
+       alert('User ID not found. Please log in again.');
+       return;
+   }
+
+    // Store video ID, user ID for backend submission
+    const proofForm = document.getElementById('proofForm');
+    proofForm.dataset.videoId = videoId;
+    proofForm.dataset.userId = userId; 
+}
+
+document.getElementById('proofForm').addEventListener('submit', submitVerification);
+
+// Handle form submission
+async function submitVerification(event) {
+    event.preventDefault();
+
+    const proofForm = document.getElementById('proofForm');
+    const formData = new FormData(proofForm);
+    const userId = proofForm.dataset.userId;  
+    const videoId = proofForm.dataset.videoId;
+
+    formData.append('userId', userId);  
+    formData.append('videoId', videoId);
+
+    
+    const token = sessionStorage.getItem('token'); 
+
+    if (!token) {
+        alert('Authentication token missing. Please log in again.');
+        return;
+    }
+
+ 
+    console.log('FormData contents:');
+    formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+    });
+
+    try {
+        const response = await fetch('http://localhost:7000/api/proofs', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,  
+            },
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('Verification submitted successfully!');
+            closeVerifyModal();
+        } else {
+            alert('Error submitting verification.');
+        }
+    } catch (error) {
+        console.error('Error submitting verification:', error);
+        alert('An error occurred. Please try again later.');
+    }
+}
+
+function closeVerifyModal() {
+    const modal = document.getElementById('verifyModal');
+    modal.style.display = 'none';
+}
+
+document.getElementById('close').addEventListener('click', closeVerifyModal);
+
+
+
+
+window.onload = fetchVideosForWatchSection;
+

@@ -13,15 +13,19 @@ body {
     /* background-image: url('/frontend/img/logo.png'); */
     }
     .login-container {
-        width: 300px;
+        width: 350px;
         padding: 20px;
         background-color: #fff;
-        border-radius: 8px;
+        border-radius: 10px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         background-attachment: fixed;
+        margin-bottom: 20px;
+       
     }
     header{
         color:  #007bff;
+        margin-top: 40px;
+        font-size: 12px;
     
     }
    
@@ -55,6 +59,27 @@ body {
         margin-right: 10px;
         box-sizing: border-box;
     }
+
+    .input-group {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+    .input-group label{
+    display: block;
+    font-size: 1rem;
+    color: green;
+    margin-bottom: 5px;
+    font-weight: bold;
+
+}
+.input-group  select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
     .show-password {
         display: flex;
         align-items: center;
@@ -65,7 +90,7 @@ body {
         background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 20px;
+        border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
     }
@@ -80,7 +105,7 @@ body {
     }
     .p a{
         text-decoration: none;
-        font-weight: bold;
-            
+      
+                   
         
     }

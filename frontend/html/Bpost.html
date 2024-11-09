@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/frontend/css/post.css">
+    <script src="https://kit.fontawesome.com/c206cd2e16.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <nav>
+        <div class="navbar">
+            <div class="navbar-logo"><a href="../html/Bhome.html"> <img src="../img/logo.png" alt="logo"></a></div>
+            
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger" id="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+              <!-- Navigation Links -->
+              <div class="nav-links">
+                <a href="../html/Bhome.html" id="home-link" class="nav-link">Home</a>
+                <a href="../html/Bwallet.html" id="wallet-link" class="nav-link">Wallet</a>
+                <a href="../html/verify.html" id="verify-link" class="nav-link">Verify</a>
+                <a href="../html/view.html" id="view-link" class="nav-link">View</a>
+                <a href="../html/Bpost.html" id="post-link" class="nav-link">Post Task</a>
+                <a href="../html/Bprofile.html" id="profile-link" class="nav-link">Profile</a>
+                <a href="../html/register.html" id="register-link">Register</a>
+            </div>
+        
+            <!-- Mobile Dropdown Links -->
+            <div class="nav-links-mobile" id="nav-links-mobile">
+                <a href="../html/Bhome.html" id="home-link">Home</a>
+                <a href="../html/Bwallet.html" id="wallet-link">Wallet</a>
+                <a href="../html/verify.html" id="verify-link">Verify</a>
+                <a href="../html/view.html" id="view-link">View</a>
+                <a href="../html/Bpost.html" id="post-link">Post Task</a>
+                <a href="../html/Bprofile.html" id="profile-link">Profile</a>
+                <a href="../html/register.html" id="register-link">Register</a>
+                </div>
+        </div>
+    </nav>
+
+    <div class="post-container">
+        <div class="post-header">
+            <h2>Post a New Video Task</h2>
+            <p>Enter the details below to share your video with Taskers.</p>
+        </div>
+
+        <form class="post-form" id="videoForm">
+            <!-- Video Name -->
+            <div class="input-group">
+                <label for="video-name">Title</label>
+                <input type="text" id="title" name="video-name" placeholder="Watch & Share Task" required>
+            </div>
+
+            <!-- Video Instructions -->
+            <div class="input-group">
+                <label for="instructions">Instructions</label>
+                <textarea id="instructions" name="instructions" placeholder="eg.1.Watch at least 5000 frames" required></textarea>
+            </div>
+
+            <!-- Video Link -->
+            <div class="input-group">
+                <label for="video-link">Video Link eg. Tiktok, Youtube, Pintrest</label>
+                <input type="url" id="url" name="video-link" placeholder="Enter the video link" required>
+            </div>
+
+            <div class="input-group">
+                <label for="positions">Number of positions</label>
+                <input type="number" id="positions" min="1" required>
+
+            </div>
+           
+            <div class="input-group">
+                <label for="budget">Budget</label>
+                <input type="number" id="budget" placeholder="Enter amount eg. 500 positions for ksh 5000/=" required>
+
+            </div>
+
+            <br>
+
+            <div class="action-buttons">
+                <button type="submit">Post Video</button>
+            </div>
+        </form>
+    </div>  
+
+
+    <footer>
+        &copy; NET _ WORK 2024
+    </footer>
+
+<script src="/frontend/js/post.js"></script>
+</body>
+</html>

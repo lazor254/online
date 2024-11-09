@@ -21,42 +21,41 @@
 
     <nav>
         <div class="navbar">
-            <div class="navbar-logo"><a href="/frontend/html/home.html"> <img src="../img/logo.png" alt="logo"></a></div>
+            <div class="navbar-logo"><a href="../html/Bhome.html"> <img src="../img/logo.png" alt="logo"></a></div>
             
             <!-- Hamburger Menu Button -->
             <div class="hamburger" id="hamburger">
                 <i class="fa-solid fa-bars"></i>
             </div>
-        
-            <!-- Navigation Links -->
-            <div class="nav-links">
-                <a href="/frontend/html/home.html" id="home-link" class="nav-link">Home</a>
-                <a href="/frontend/html/wallet.html" id="wallet-link" class="nav-link">Wallet</a>
-                <a href="/frontend/html/mine.html" id="mine-link" class="nav-link" >Mine</a>
-                <a href="/frontend/html/watch.html" id="watch-link" class="nav-link">Watch</a>
-                <a href="/frontend/html/post.html" id="post-link" class="nav-link" style="display: none;">Post Task</a>
-                <a href="/frontend/html/profile.html" id="profile-link" class="nav-link">Profile</a>
-                <a href="/frontend/html/register.html" id="register-link">Register</a>
+              <!-- Navigation Links -->
+              <div class="nav-links">
+                <a href="../html/Bhome.html" id="home-link" class="nav-link">Home</a>
+                <a href="../html/Bwallet.html" id="wallet-link" class="nav-link">Wallet</a>
+                <a href="../html/verify.html" id="verify-link" class="nav-link">Verify</a>
+                <a href="../html/view.html" id="view-link" class="nav-link">View</a>
+                <a href="../html/Bpost.html" id="post-link" class="nav-link">Post Task</a>
+                <a href="../html/Bprofile.html" id="profile-link" class="nav-link">Profile</a>
+                <a href="../html/register.html" id="register-link">Register</a>
             </div>
         
             <!-- Mobile Dropdown Links -->
             <div class="nav-links-mobile" id="nav-links-mobile">
-                <a href="/frontend/html/home.html" id="home-link">Home</a>
-                <a href="/frontend/html/wallet.html" id="wallet-link">Wallet</a>
-                <a href="/frontend/html/mine.html" id="mine-link">Mine</a>
-                <a href="/frontend/html/watch.html" id="watch-link">Watch</a>
-                <a href="/frontend/html/post.html" id="post-link" style="display: none;">Post Task</a>
-                <a href="/frontend/html/profile.html" id="profile-link">Profile</a>
-                <a href="/frontend/html/register.html" id="register-link">Register</a>
-            </div>
+                <a href="../html/Bhome.html" id="home-link">Home</a>
+                <a href="../html/Bwallet.html" id="wallet-link">Wallet</a>
+                <a href="../html/verify.html" id="verify-link">Verify</a>
+                <a href="../html/view.html" id="view-link">View</a>
+                <a href="../html/Bpost.html" id="post-link">Post Task</a>
+                <a href="../html/Bprofile.html" id="profile-link">Profile</a>
+                <a href="../html/register.html" id="register-link">Register</a>
+                </div>
         </div>
     </nav>
 <main>
     
     <section class="wallet-container">
         <div class="wallet-header">
-            <h1 style="color: green; font-size: 45px;">Your Wallet</h1>
-            <p>Overview of your deposits, earnings, and transactions</p>
+            <h1>Your Wallet</h1>
+            <p>Overview of your deposits, spendings, and transactions</p>
         </div>
         <div class="wallet-overview">
             <div class="balance">
@@ -64,19 +63,19 @@
                 <p>$<span id="balance">0.00</span></p>
             </div>
             <div class="deposits">
-                <h3>Pending</h3>
+                <h3>Total Deposits</h3>
                 <p>$<span id="deposits">0.00</span></p>
             </div>
             <div class="earnings">
-                <h3>Earnings</h3>
+                <h3>Total Spendings</h3>
                 <p>$<span id="earnings">0.00</span></p>
             </div>
         </div>
 
         <!-- Add Deposit & Withdraw Buttons -->
         <div class="wallet-actions">
-            <!-- <button class="deposit-btn">Deposit Funds</button> -->
-            <button class="withdraw-btn">Withdraw Funds</button>
+            <button class="deposit-btn">Deposit Funds</button>
+          
         </div>
 
         <!-- Transaction History -->
@@ -92,7 +91,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+                   
                 </tbody>
             </table>
         </div>

@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('email').value;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const userType = document.getElementById('userType').value;
+
+            if (!email || !username || !password || !userType) {
+                registerMsg.textContent = 'All fields are Required.';
+            }
+
 
             try {
                 const response = await fetch('http://localhost:7000/api/register', {
@@ -16,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, username, password })
+                    body: JSON.stringify({ email, username, password, userType })
                 });
 
                 // Handle empty response or non-JSON content
@@ -43,10 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
-
-
 
 
 const showPasswordCheckbox = document.getElementById('show-password');

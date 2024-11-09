@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch</title>
-    <link rel="stylesheet" href="/frontend/css/pages.css">
+    <link rel="stylesheet" href="../css/pages.css">
     <script src="https://kit.fontawesome.com/c206cd2e16.js" crossorigin="anonymous"></script>
     <style>
         body{
@@ -14,7 +14,89 @@
          background-repeat: no-repeat;
          background-attachment: fixed;
          height: 100vh;
-    }
+            }
+        /* Modal content styling */
+        #verifyModal .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            }
+
+        /* Close button styling */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            }
+
+
+         #verifyModal {
+            display: none; /* Hidden by default, shown by JavaScript */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it appears above other content */
+            }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        /* Form field styling */
+        #verifyModal label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            color: green;
+            font-size: 1.2em;
+             }
+
+        #verifyModal input[type="text"], #verifyModal input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            }
+
+        /* Submit button styling */
+        #verifyModal button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            }
+
+        #verifyModal button:hover {
+            background-color: darkgreen;
+             }
+        
+
+
+
 </style>
 
 </head>
@@ -34,6 +116,7 @@
             <a href="/frontend/html/wallet.html" id="wallet-link" class="nav-link">Wallet</a>
             <a href="/frontend/html/mine.html" id="mine-link" class="nav-link" >Mine</a>
             <a href="/frontend/html/watch.html" id="watch-link" class="nav-link">Watch</a>
+            <a href="/frontend/html/post.html" id="post-link" class="nav-link" style="display: none;">Post Task</a>
             <a href="/frontend/html/profile.html" id="profile-link" class="nav-link">Profile</a>
             <a href="/frontend/html/register.html" id="register-link">Register</a>
         </div>
@@ -44,6 +127,7 @@
             <a href="/frontend/html/wallet.html" id="wallet-link">Wallet</a>
             <a href="/frontend/html/mine.html" id="mine-link">Mine</a>
             <a href="/frontend/html/watch.html" id="watch-link">Watch</a>
+            <a href="/frontend/html/post.html" id="post-link" style="display: none;">Post Task</a>
             <a href="/frontend/html/profile.html" id="profile-link">Profile</a>
             <a href="/frontend/html/register.html" id="register-link">Register</a>
         </div>
@@ -57,28 +141,41 @@
             <!-- Cards space -->
         </div>
     </section>
-
-    <section id="subscribe-section">
-        <h2>SUBSCRIPTION TASKS</h2>
-        <div class="card-container" id="subscribe-cards">
-            <!-- Cards space -->
-        </div>
-    </section>
-
+    
     <section id="watch-section">
-        <h2>WATCH FOR $</h2>
-        <div class="card-container" id="watch-cards" style="margin-bottom: 60px;">
+        <h2>VIDEO TASKS FOR $</h2>
+        <div class="card-container" id="videos-container" style="margin-bottom: 60px;">
             <!-- Cards space -->
         </div>
-    </section>
+    
+        <div id="verifyModal" style="display: none;">
+            <div class="modal-content">
+                <span id="close" class="close-button">&times;</span>
+                <h2 style="color: blue;">Verification Form</h2>
+                
+                <form id="proofForm" enctype="multipart/form-data">
+                    <label for="videoLink">Link To Where You Shared:</label>
+                    <input type="text" id="videoLink" name="videoLink" placeholder="Enter video link: gmail, whatsapp & telegram not accepted" required>
+        
+                    <label for="screenshot">Upload Screenshot (Proof):</label>
+                    <input type="file" id="screenshot" name="screenshot" required>
+        
+                    <button type="submit">SUBMIT</button>
+                </form>
+            </div>
+        </div>
+        
+        
+
+</section>
 
 
 </main>
 
 
-<footer>
+ <!-- <footer>
     <p>&copy; NET _ WORK 2024</p>
-</footer>
+</footer>  -->
 
 <script src="../js/watch.js"></script>
 

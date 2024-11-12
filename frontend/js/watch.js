@@ -34,7 +34,7 @@ async function fetchVideosForWatchSection() {
         });
         
         const videos = await response.json();
-        console.log('Fetched Videos:', videos);  // Log the response to see the fetched data
+     
         
         if (response.ok) {
             populateWatchSection(videos);  // Call the correct function
@@ -82,7 +82,7 @@ function populateWatchSection(videos) {
             </div>
             
             <button onclick="watchVideo('${video.url}')">Watch</button>
-            <button onclick="openVerifyModal(${video.id})">Verify</button>  <!-- Trigger modal here -->
+            <button onclick="openVerifyModal(${video.id}, ${amountPerPosition})">Verify</button>  <!-- Trigger modal here -->
         `;
 
         container.appendChild(card);
@@ -119,7 +119,7 @@ function toggleInstructions(videoId) {
 
 // open verification modal
 
-function openVerifyModal(videoId) {
+function openVerifyModal(videoId, amountPerPosition) {
     const modal = document.getElementById('verifyModal');
     modal.style.display = 'flex';
 
@@ -136,6 +136,7 @@ function openVerifyModal(videoId) {
     const proofForm = document.getElementById('proofForm');
     proofForm.dataset.videoId = videoId;
     proofForm.dataset.userId = userId; 
+    proofForm.dataset.amountPerPosition = amountPerPosition;
 }
 
 document.getElementById('proofForm').addEventListener('submit', submitVerification);
@@ -148,9 +149,11 @@ async function submitVerification(event) {
     const formData = new FormData(proofForm);
     const userId = proofForm.dataset.userId;  
     const videoId = proofForm.dataset.videoId;
+    const amountPerPosition = proofForm.dataset.amountPerPosition;
 
     formData.append('userId', userId);  
     formData.append('videoId', videoId);
+    formData.append('amountPerPosition', amountPerPosition);
 
     
     const token = sessionStorage.getItem('token'); 

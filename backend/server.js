@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-const Proof ={
+const proofs ={
     pending: 'pending', 
     verified: 'verified', 
     declined:'declined'
@@ -74,9 +74,10 @@ async function initializeDatabase() {
         const createWallet = `
            CREATE TABLE IF NOT EXISTS wallet (
                 id INT PRIMARY KEY AUTO_INCREMENT,
-                user_id INT,
-                earnings DECIMAL(10, 2) DEFAULT 0,
-                pending DECIMAL(10, 2) DEFAULT 0
+                user_id INT NOT NULL,
+                earnings DECIMAL(10, 2) DEFAULT 0.00,
+                pending DECIMAL(10, 2) DEFAULT 0.00,
+                FOREIGN KEY (user_id) REFERENCES users(id)
             );
 
         
@@ -93,8 +94,7 @@ async function initializeDatabase() {
                 amount DECIMAL(10, 2),
                 video_link VARCHAR(255),
                 screenshot_path VARCHAR(255),
-                status ENUM('pending', 'verified', 'declined') DEFAULT 'pending',
-                verified BOOLEAN DEFAULT FALSE,
+                status ENUM('pending', 'verified', 'declined') NOT NULL DEFAULT 'pending',
                 FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
@@ -159,25 +159,47 @@ const authenticate = (req, res, next) => {
 app.post('/api/register', async (req, res) => {
     try {
         const { email, username, password, userType } = req.body;
+
+        // Validate required fields (redundant with client-side validation)
         if (!email || !username || !password || !userType) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
         const db = req.app.locals.db;
-        const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 
+        // Check for existing user
+        const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         if (existingUser.length) {
             return res.status(409).json({ message: 'User already exists' });
         }
 
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        await db.query('INSERT INTO users (email, username, password, usertype) VALUES (?, ?, ?, ?)', [email, username, hashedPassword, userType]);
+
+        // Insert user into the database
+        const [result] = await db.query(
+            'INSERT INTO users (email, username, password, userType) VALUES (?, ?, ?, ?)',
+            [email, username, hashedPassword, userType]
+        );
+
+        // Get the inserted user ID
+        const user_id = result.insertId;
+
+        // Create a new wallet for the user
+        await db.query(
+            'INSERT INTO wallet (user_id, earnings, pending) VALUES (?, ?, ?)',
+            [user_id, 0.00, 0.00]
+        );
+
         return res.status(200).json({ message: 'User created successfully' });
+
     } catch (err) {
-        res.status(500).json({ message: 'Internal server error', error: err.message });
+        res.status(500).json({ message: 'Internal server error' }); // Avoid exposing error details
     }
 });
 
+         
+    
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     const db = req.app.locals.db; 
@@ -262,7 +284,7 @@ app.get('/api/videos/all', authenticate, (req, res) => {
         db.query(query, [buyerId])
             .then(([videos]) => {
                 if (videos.length === 0) {
-                    return res.status(404).json({ message: 'No videos found for this buyer' });
+                    return res.status(404).json({ message: 'You have Not Posted Yet' });
                 }
 
                 res.json(videos); 
@@ -274,6 +296,7 @@ app.get('/api/videos/all', authenticate, (req, res) => {
     });
     
 
+// for update and refresh
 
 app.get('/api/videos/update', authenticate, async (req, res) => {
     const db = req.app.locals.db;
@@ -327,23 +350,28 @@ app.get('/api/videos/update', authenticate, async (req, res) => {
         }
     });
 
-  
-
 
 //proof
 app.post('/api/proofs', authenticate, upload.single('screenshot'), async (req, res) => {
-    console.log("Request Headers:", req.headers); 
+    console.log("Request Body:", req.body); 
     const db = req.app.locals.db;
-    const { videoLink, videoId } = req.body;
+    const { videoLink, videoId} = req.body;
     const screenshotPath = req.file.filename ? req.file.path : null;
-
     const taskerId = req.userId;
 
     try {
+       const amountPerPosition = parseFloat(req.body.amountPerPosition).toFixed(2);
+        
         const [result] = await db.query(
-            'INSERT INTO proofs (video_id, amount, video_link, screenshot_path, user_id, verified) VALUES (?, ?, ?, ?, ?, ?)',
-            [videoId, videoLink, screenshotPath, taskerId, false]
+            'INSERT INTO proofs (video_id, video_link, screenshot_path, user_id, amount, status) VALUES (?, ?, ?, ?, ?, ?)',
+            [videoId, videoLink, screenshotPath, taskerId, amountPerPosition, 'pending']
         );
+
+        await db.query(
+            'UPDATE wallet SET pending = pending + ? WHERE user_id = ?',
+            [amountPerPosition, taskerId]
+        );
+
         const [videoStats] = await db.query(
             `SELECT COUNT(*) AS positionsFilled, 
                     (SELECT positions FROM videos WHERE id = ?) - COUNT(*) AS remainingPositions
@@ -356,7 +384,8 @@ app.post('/api/proofs', authenticate, upload.single('screenshot'), async (req, r
             message: 'Proof submitted successfully', 
             proofId: result.insertId, 
             positionsFilled: videoStats[0].positionsFilled, 
-            remainingPositions: videoStats[0].remainingPositions 
+            remainingPositions: videoStats[0].remainingPositions,
+            amount:amountPerPosition
         });
     }
     catch (error) {
@@ -370,9 +399,9 @@ app.post('/api/proofs', authenticate, upload.single('screenshot'), async (req, r
 app.get('/api/verify', async (req, res) => {
     try {
         const [proofs] = await req.app.locals.db.query(`
-            SELECT id, video_id, video_link, screenshot_path, user_id, verified 
+            SELECT id, video_id, video_link, screenshot_path, user_id, status 
             FROM proofs 
-            WHERE verified = false
+            WHERE status = 'pending'
         `);
 
         res.status(200).json(proofs);
@@ -408,38 +437,99 @@ app.get('/api/videos/:id', authenticate, async (req, res) => {
 
 
         // wallet to add proof
-        app.post('/api/award/:proofId', async (req, res) => {
+        app.post('/api/award/:proofId', authenticate, async (req, res) => {
             const db = req.app.locals.db;
-            const { videoId, userId, awardAmount, status } = req.body;
-            const {proofId} = req.params
-
+            const { videoId, status } = req.body; 
+            const { proofId } = req.params;
+        
+            // Validate status
+            const validStatuses = ['verified', 'pending', 'declined'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({ message: 'Invalid status' });
+            }
+        
             try {
-
-                await db.query(
-                    'UPDATE videos SET position_filled = position_filled +?, remaining_positions = remaining_positions -? WHERE id = ?',
-                    [1, 1, videoId]
-                );
-                
-                await db.query(
-                    'UPDATE proofs SET verified = true WHERE id = ?',
-                    [proofId, status]
-                );
-                if(status !==Proof.verified){
-                    // Add amount to user wallet's pending section
-                    await req.db.query(
-                        'UPDATE wallet SET amount =? status = ? WHERE user_id = ?',
-                        [awardAmount, status, userId]
-                    );
-                return  res.status(200).json({ message: 'User awarded successfully' });
-
+                // Fetch proof details
+                const [proofRows] = await db.query(`SELECT user_id, amount FROM proofs WHERE id = ?`, [proofId]);
+                if (proofRows.length === 0) {
+                    return res.status(404).json({ message: 'Proof not found' });
                 }
-                return res.status(200).json({ message: `Task has been marked as ${status}` });
+        
+                const { user_id: fetchedUserId, amount } = proofRows[0];
+        
+                // Update the proof's status
+                await db.query(
+                    'UPDATE proofs SET status = ? WHERE id = ?',
+                    [status, proofId]
+                );
+        
+                // Update the videos table if verified
+                if (status === 'verified') {
+                    await db.query(
+                        'UPDATE videos SET position_filled = position_filled + 1, remaining_positions = positions - (position_filled) WHERE id = ?',
+                        [videoId]
+                    );
+        
+                    // Move amount from pending to earnings in the wallet
+                    await db.query(
+                        'UPDATE wallet SET earnings = earnings + ?, pending = pending - ? WHERE user_id = ?',
+                        [amount, amount, fetchedUserId]
+                    );
+        
+                    res.status(200).json({ message: 'Proof verified and amount added to earnings' });
 
+                } else if (status === 'declined') {
+                    await db.query(
+                        'UPDATE wallet SET pending = pending - ? WHERE user_id = ? AND pending >= ?',
+                        [amount, fetchedUserId, amount]
+                    );
+        
+                    res.status(200).json({ message: 'Proof declined and amount removed from pending' });
+        
+                } else if (status === 'pending') {
+                    // Add amount to pending in the wallet
+                    await db.query(
+                        'UPDATE wallet SET pending = pending + ? WHERE user_id = ?',
+                        [amount, fetchedUserId, amount]
+                    );
+        
+                    res.status(200).json({ message: 'Proof marked as pending and amount added to pending' });
+                }
+        
             } catch (error) {
                 console.error('Error awarding user:', error);
                 res.status(500).json({ message: 'Failed to award user' });
             }
         });
+        
+
+app.get('/api/wallet', authenticate, async (req, res) => {
+    const db = req.app.locals.db;
+    const userId = req.userId;
+
+    const query = `
+        SELECT 
+            SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS pending,
+            SUM(CASE WHEN status = 'verified' THEN amount ELSE 0 END) AS earnings
+        FROM proofs
+        WHERE user_id = ?
+    `;
+
+    try {
+        const [walletDetails] = await db.query(query, [userId]);
+        res.status(200).json({ 
+            earnings: walletDetails[0].earnings || 0, 
+            pending: walletDetails[0].pending || 0 
+        });
+        console.log(walletDetails);
+    } catch (error) {
+        console.error('Error fetching wallet details:', error);
+        res.status(500).json({ message: 'Failed to retrieve wallet details' });
+    }
+});
+
+
+
 
 
 

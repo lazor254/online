@@ -1,11 +1,14 @@
 require('dotenv/config');
 const cors = require('cors');
-const mysql = require('mysql2/promise'); // use promise-based version
+const mysql = require('mysql2/promise');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+// const depositRoutes = require('./routes/deposit');
+
+// app.use('/api', depositRoutes);
 
 const proofs ={
     pending: 'pending', 
@@ -21,6 +24,10 @@ app.use('/uploads', express.static('uploads'));
 app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ limit: '30mb', extended: true }));
 
+
+
+
+
 // Database connection and creation
 async function initializeDatabase() {
     try {
@@ -29,17 +36,10 @@ async function initializeDatabase() {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD
         });
-        console.log("Database connected successfully");
-
-        // Create the database if it doesn't exist
-        await db.query(`CREATE DATABASE IF NOT EXISTS online`);
-        console.log("Database created successfully");
-
-        // Select the database
+      
+        await db.query(`CREATE DATABASE IF NOT EXISTS online`);     
         await db.changeUser({ database: 'online' });
-        console.log("Switched to 'online' database");
-
-        // Create tables
+        
         const createUsersTable = `
             CREATE TABLE IF NOT EXISTS users(
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,7 +50,6 @@ async function initializeDatabase() {
             );
         `;
         await db.query(createUsersTable);
-        console.log("Users table created or already exists");
 
         const createVideoTasks = `
             CREATE TABLE IF NOT EXISTS videos(
@@ -67,9 +66,7 @@ async function initializeDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `;
-        await db.query(createVideoTasks);
-        console.log("Videos table created or already exists");
-  
+        await db.query(createVideoTasks);  
 
         const createWallet = `
            CREATE TABLE IF NOT EXISTS wallet (
@@ -83,9 +80,7 @@ async function initializeDatabase() {
         
         `;
         await db.query(createWallet);
-        console.log("wallet table created successfully");
-
-
+       
                 const createProofs = `
             CREATE TABLE IF NOT EXISTS proofs(
                 id INT PRIMARY KEY AUTO_INCREMENT,
@@ -119,8 +114,22 @@ async function initializeDatabase() {
         console.log("createVideo_status table created successfully");
 
 
+            const createdeposits = `
+          CREATE TABLE IF NOT EXISTS deposits (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                user_id INT NOT NULL,
+                amount DECIMAL(10, 2) NOT NULL,
+                code VARCHAR(100) NOT NULL,
+                status ENUM('verified', 'pending', 'declined') DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+            );
+            `;
+            await db.query(createdeposits);
+            console.log("deposits in place");
 
 
+
+            app.locals.db = db;
         return db;
     } catch (error) {
         console.error("Database initialization error:", error);
@@ -129,13 +138,12 @@ async function initializeDatabase() {
 }
 
 initializeDatabase().then((db) => {
-    // Assign the `db` connection object to `app.locals` for global access
-    app.locals.db = db;
-
-    app.listen(port, () => {
+       app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
 });
+
+
 
 // Middleware for authentication
 const authenticate = (req, res, next) => {
@@ -525,6 +533,37 @@ app.get('/api/wallet', authenticate, async (req, res) => {
     } catch (error) {
         console.error('Error fetching wallet details:', error);
         res.status(500).json({ message: 'Failed to retrieve wallet details' });
+    }
+});
+
+
+app.post('/api/deposit', authenticate, async (req, res) => {
+
+    try {
+        const { amount, code } = req.body;
+        const userId = req.userId;
+
+        if ( !amount || !code) {
+            return res.status(400).json({ error: 'Amount and code required' });
+        }
+        console.log('Inserting data:', { userId, amount, code });
+
+        const db = req.app.locals.db;
+        const [result] = await db.query(
+            `INSERT INTO deposits (user_id, amount, code, status) VALUES (?, ?, ?, ?)`,
+            [userId, amount, code, 'pending']
+        );
+
+        res.json({
+            message: 'Sent! Wait for verification and amount reflection.',
+            depositId: result.insertId,
+            amount,
+            code
+        });
+
+    } catch (error) {
+        console.error('Error inserting deposit:', error);
+        res.status(500).json({ error: 'Database error occurred' });
     }
 });
 

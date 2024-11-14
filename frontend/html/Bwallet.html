@@ -14,7 +14,85 @@
              background-repeat: no-repeat;
              background-attachment: fixed;
              height: 100vh;
+           
         }
+
+       #depositForm .modal-content{
+            padding: 50px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+            justify-content: center;
+            margin: 50px auto;
+       }
+
+        #depositForm {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); 
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+
+        }
+
+        #depositSubmissionForm {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+          }
+
+
+        #depositForm p {
+            font-size: 14px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        /* Styling input fields */
+        #depositSubmissionForm input[type="number"],
+        #depositSubmissionForm input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+      
+        #depositSubmissionForm button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28A745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        #closeOverlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -63,7 +141,7 @@
                 <p>$<span id="balance">0.00</span></p>
             </div>
             <div class="deposits">
-                <h3>Total Deposits</h3>
+                <h3>Pending Deposits</h3>
                 <p>$<span id="deposits">0.00</span></p>
             </div>
             <div class="earnings">
@@ -74,7 +152,7 @@
 
         <!-- Add Deposit & Withdraw Buttons -->
         <div class="wallet-actions">
-            <button class="deposit-btn">Deposit Funds</button>
+            <button class="deposit-btn" id="depositButton">Deposit Funds</button>
           
         </div>
 
@@ -97,13 +175,39 @@
         </div>
     </section>
 
+
+    <div id="depositForm">
+        <div class="modal-content">
+        <form id="depositSubmissionForm">
+            <span id="closebtn" style="color: red; font-weight: bold; font-size: 20px; cursor: pointer;">&times;</span>
+            <p style="font-weight: bold;">Follow Instruction To complete Deposit:</p>
+            <p>1. Pay Bill Bussiness Nmber: 247247 Account No.7770181222058</p>
+            <p>2. Enter the amount you deposited and the Mpesa code eg. SKC715KQ3 </p>
+            <p>Submit the form and Wait for about 5 minutes for the amount to reflect in your Wallet</p>
+
+
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" required>
+
+            <label for="code">Code</label>
+            <input type="text" id="code" name="code" required>
+
+            <button type="submit">Submit</button>
+
+        </form>
+   </div>
+</div>
+
+
+
+
 </main>
 
 <footer>
     <p>&copy; NET _ WORK 2024</p>
 </footer>
 
-<script src="../js/wallet.js"></script>
+<script src="../js/buyerjs/Bwallet.js"></script>
 
 </body>
 </html>

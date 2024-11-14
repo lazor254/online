@@ -73,14 +73,6 @@ function checkAuthentication() {
         return; // Stop further execution
     }
 
-    // // Redirect based on user type
-    // if (userType) {
-    //     if (userType === 'tasker') {
-    //         window.location.replace('./home.html');  // Redirect tasker to home.html
-    //     } else if (userType === 'buyer') {
-    //         window.location.replace('./Bhome.html'); // Redirect buyer to bhome.html (fix filename)
-    //     }
-    // }
 }
 
 });
